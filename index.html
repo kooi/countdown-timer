@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+
+<style type="text/css">
+.numbers {
+    padding: 0px;
+    text-align: center;
+    font-family: Arial;             
+    font-size: 200px;
+    font-weight: bold;    /* options are normal, bold, bolder, lighter */
+    font-style: normal;   /* options are normal or italic */
+    //color: #FFFFFF;       /* change color using the hexadecimal color codes for HTML */
+}
+#table {
+    //width: 400px;
+    //height: 70px;
+    //border-style: ridge;
+    //border-width: 3px;
+    //border-color: #666666;       /* change color using the hexadecimal color codes for HTML */
+    //background-color: #222222;   /* change color using the hexadecimal color codes for HTML */
+    margin: 0px auto;
+    position: relative;   /* leave as "relative" to keep timer centered on your page, or change to "absolute" then change the values of the "top" and "left" properties to position the timer */
+    top: 100px;             /* change to position the timer */
+    left: 0px;            /* change to position the timer; delete this property and it's value to keep timer centered on page */
+}
+
+</style>
+
+<script type="text/javascript">
+
+var hour=2;      //-->Enter the count down target date HOUR (24 hour clock)
+var endDate = null;
+
+function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
+}
+
+
+function setEndDateToCookie() {
+	var cookieEndDate = readCookie('CountdownTimerEndDate');
+
+	if (cookieEndDate !=null) {
+		endDate = new Date();
+		endDate.setTime(cookieEndDate);
+	}	
+}
+
+function resetEndDate() {
+	eraseCookie('CountdownTimerEndDate');
+	endDate = null;
+}
+
+function StartCounter() {
+	var startDate = new Date();
+
+	if (endDate == null){
+		endDate = new Date();
+		endDate.setTime((startDate.getTime() + (hour*60*60*1000))); 
+		createCookie('CountdownTimerEndDate',endDate.getTime(),2);
+	}
+}
+
+function timeLeft() {
+	var uitvoer;
+
+	if (endDate == null) {
+		uitvoer = "<a onclick='StartCounter()' href=''>Start</a>";	
+	}
+	else {
+		var currentDate = new Date();
+		var totalSecLeft = (endDate.getTime() - currentDate.getTime())/1000;
+		if (totalSecLeft >= 0) {  
+			var hoursLeft = Math.floor(totalSecLeft / (60*60));
+			var minLeft = Math.floor((totalSecLeft - (hoursLeft*60*60))/60);
+			if (minLeft < 10) {
+				minLeft = "0" + minLeft; 
+			}
+			var secLeft = Math.floor(totalSecLeft - (hoursLeft*60*60)- (minLeft*60));
+			if (secLeft < 10) {
+				secLeft = "0" + secLeft; 
+			}
+			uitvoer = hoursLeft + ":" + minLeft + ":" + secLeft;
+		}
+		else{
+			uitvoer = "tijd is verstreken";			
+		}
+		
+	}
+	document.getElementById('dtest').innerHTML=uitvoer;
+	setTimeout("timeLeft()",1000);
+}
+
+</script>
+
+</head>
+
+<body onload="setEndDateToCookie(); timeLeft();">
+<table id="table" border="0">
+    <tr>
+        <td align="center" ><span class="numbers" id="dtest"></span></td>
+    </tr>
+    <tr>
+        <td align="center" ><a onclick="resetEndDate()" href="">Reset</a></td>
+    </tr>
+</table>	
+
+
+</body>
+</html>
