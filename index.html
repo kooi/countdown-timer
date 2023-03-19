@@ -31,7 +31,8 @@
 
 <script type="text/javascript">
 
-var hour=2;      //-->Enter the count down target date HOUR (24 hour clock)
+var hour=0;      //-->Enter the count down target date HOUR (24 hour clock)
+var min=50;
 var endDate = null;
 
 function createCookie(name,value,days) {
@@ -79,7 +80,7 @@ function StartCounter() {
 
 	if (endDate == null){
 		endDate = new Date();
-		endDate.setTime((startDate.getTime() + (hour*60*60*1000))); 
+		endDate.setTime((startDate.getTime() + (hour*60*60*1000) + (min*60*1000))); 
 		createCookie('CountdownTimerEndDate',endDate.getTime(),2);
 	}
 }
